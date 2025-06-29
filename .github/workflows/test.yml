@@ -25,7 +25,7 @@ jobs:
           pip install cml==0.0.1 --no-deps
 
       - name: Run model training & save output
-        run: python src/trainer.py > report.txt
+        run: python src/model_trainer.py > report.txt
 
       - name: Set up CML CLI
         uses: iterative/setup-cml@v2

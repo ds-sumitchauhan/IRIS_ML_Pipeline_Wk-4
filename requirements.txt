@@ -2,5 +2,5 @@ pandas
 numpy
 scikit-learn
 joblib
-pytest
+pytest >=6.0
 cml

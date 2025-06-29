@@ -32,7 +32,7 @@ jobs:
 
       - name: Post report as PR comment
         env:
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_TOKEN: ${{ secrets.CML_TOKEN }}
         run: |
           echo "## ✅ Iris Model Evaluation Report" > report.md
           cml comment create report.md

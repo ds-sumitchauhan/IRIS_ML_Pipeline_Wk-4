@@ -1,23 +1,41 @@
-name: Run Pytest and Comment Accuracy
+name: Test and Comment
 
-on: [pull_request]
+on:
+  pull_request:
+    branches: [main]
 
 jobs:
-  test:
+  test-and-report:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: 📥 Checkout repo
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.12'
+          python-version: 3.12
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: |
-          pip install pandas scikit-learn pytest
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Run tests
-        run: pytest tests/
+      - name: 📁 Add src to PYTHONPATH
+        run: echo "PYTHONPATH=${{ github.workspace }}/src" >> $GITHUB_ENV
+
+      - name: 🧪 Run Training and Save Output
+        run: |
+          python src/trainer.py > report.txt
+
+      - name: 💬 Post Report as PR Comment
+        uses: iterative/cml@v2
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          markdown: |
+            ## ✅ Iris Model Evaluation Report
+            \`\`\`
+            $(cat report.txt)
+            \`\`\`

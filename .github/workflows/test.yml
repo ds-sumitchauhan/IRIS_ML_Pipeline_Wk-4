@@ -29,10 +29,10 @@ jobs:
 
       - name: Set up CML CLI
         uses: iterative/setup-cml@v2
-
-      - name: Post report as PR comment
-        env:
-          REPO_TOKEN: ${{ secrets.CML_TOKEN }}
+        
+      - name: Create report
+        run: echo "## ✅ Iris Model Evaluation Report" > report.md
+        
+      - name: Post CML comment
         run: |
-          echo "## ✅ Iris Model Evaluation Report" > report.md
-          cml comment create report.md
+          cml comment create report.md --token ${{ secrets.CML_TOKEN }}

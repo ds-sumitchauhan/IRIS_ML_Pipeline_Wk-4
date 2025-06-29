@@ -1,34 +1,23 @@
-name: Run Tests
+name: Run Pytest and Comment Accuracy
 
-on:
-  pull_request:
-    branches: [main]
+on: [pull_request]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
+          pip install pandas scikit-learn pytest
 
-      - name: Run Pytest and Save Output
-        run: |
-          pytest --junitxml=results.xml > results.txt
-
-      - name: Publish Report with CML
-        env:
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "## Test Results" > report.md
-          cat results.txt >> report.md
-          cml comment create report.md
-
+      - name: Run tests
+        run: pytest tests/

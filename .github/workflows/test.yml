@@ -35,5 +35,4 @@ jobs:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "## ✅ Iris Model Evaluation Report" > report.md
-          cat report.txt >> report.md
-          cml comment create --md report.md
+          cml comment create report.md

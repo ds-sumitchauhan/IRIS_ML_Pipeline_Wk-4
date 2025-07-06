@@ -11,3 +11,10 @@ def train_and_evaluate(df):
     model.fit(X_train, y_train)
     acc = accuracy_score(y_test, model.predict(X_test))
     return model, acc
+
+#from src.model import train_and_evaluate
+
+if __name__ == "__main__":
+    model, acc = train_and_evaluate()
+    print(f"Model trained successfully.\n Accuracy: {acc:.4f}")
+

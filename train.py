@@ -144,10 +144,13 @@ import sys
 # %%
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
+import mlflow
+import mlflow.sklearn
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.ensemble import RandomForestClassifier as rfc
 from pandas.plotting import parallel_coordinates
 from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn import metrics
+from sklearn.metrics import accuracy_score
 
 data = pd.read_csv('data/iris.csv')
 #data.head(5)
@@ -159,17 +162,41 @@ y_train = train.species
 X_test = test[['sepal_length','sepal_width','petal_length','petal_width']]
 y_test = test.species
 
-# %%
-mod_dt = DecisionTreeClassifier(max_depth = 3, random_state = 1)
-mod_dt.fit(X_train,y_train)
-prediction=mod_dt.predict(X_test)
-print('The accuracy of the Decision Tree is',"{:.3f}".format(metrics.accuracy_score(prediction,y_test)))
+# Enable MLflow autologging
+mlflow.sklearn.autolog()
+
+#Define hyperparameter grid
+param_grdod = {
+        'n_estimators':[10. 50, 100],
+        'max_depth' : [3,5,10],
+        'min_sample_split':[2,4]
+        }
+
+# Start experiment
+with mlflow.start_run():
+    clf = GridSearchCV(rfc(random_state=42), param_grid, cv = 3)
+    clf.fit(X_train, y_train)
+
+    preds = clf.predict(X_test)
+    acc = accuracy_score(y_test, preds)
+
+    print(f"Best Prams : {clf.best_params_}")
+    print(f"Test Accuracy: {acc:.4f}")
+
+mlflow.log_metric("accuracy", acc)
+mlflow.sklearn.log_model(clf.best_estimator_, "best_model")
+
+                       # %%
+#od_dt = DecisionTreeClassifier(max_depth = 3, random_state = 1)
+#od_dt.fit(X_train,y_train)
+#rediction=mod_dt.predict(X_test)
+#rint('The accuracy of the Decision Tree is',"{:.3f}".format(metrics.accuracy_score(prediction,y_test)))
 
 # %%
 # import pickle
-import joblib
+#mport joblib
 
-joblib.dump(mod_dt, "model.joblib")
+#oblib.dump(mod_dt, "model.joblib")
 
 # %% [markdown]
 # ### Upload model artifacts and custom code to Cloud Storage

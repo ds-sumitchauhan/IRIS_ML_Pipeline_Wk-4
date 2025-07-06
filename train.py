@@ -166,10 +166,10 @@ y_test = test.species
 mlflow.sklearn.autolog()
 
 #Define hyperparameter grid
-param_grdod = {
-        'n_estimators':[10. 50, 100],
+param_grid = {
+        'n_estimators':[10, 50, 100],
         'max_depth' : [3,5,10],
-        'min_sample_split':[2,4]
+        'min_samples_split':[2,4]
         }
 
 # Start experiment

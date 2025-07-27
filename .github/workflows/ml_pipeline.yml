@@ -1,11 +1,19 @@
+name: Test and Comment
+
+on:
+  pull_request:
+    branches: [main]
+
 jobs:
-  train:
+  test_and_report:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
@@ -15,21 +23,25 @@ jobs:
           pip install cloud-ml-sdk==0.3.71 --no-deps
           pip install cloud-ml-common==0.0.2
           pip install cml==0.0.1 --no-deps
-          pip install google-auth google-cloud-storage
+
+      - name: Run model training & save output
+        run: python src/model_trainer.py df > report.txt
 
       - name: Set up GCP credentials
-        run: |
-          echo "${{ secrets.GCP_CREDENTIALS }}" > key.json
-          ls -l key.json  # ✅ confirm it exists
+        run: echo "${{ secrets.GCP_CREDENTIALS }}" > key.json
 
-      - name: Train model with hyperparameter tuning
+      - name: Authenticate GCP
         run: |
-          python train.py > metrics.txt
-          tail -n 10 metrics.txt > report.md
+          pip install google-auth
+          export GOOGLE_APPLICATION_CREDENTIALS=key.json
+          echo "GCP credentials setup complete."
 
-      - name: Comment Report
-        env:
-          REPO_TOKEN: ${{ secrets.CML_TOKEN }}
-        run: |
-          pip install cml
-          cml comment create report.md --token $REPO_TOKEN
+
+      - name: Set up CML CLI
+        uses: iterative/setup-cml@v2
+        
+      - name: Create report
+        run: echo "## ✅ Iris Model Evaluation Report" > report.md
+        
+      - name: Post CML comment
+        run: cml comment create report.md --token ${{ secrets.CML_TOKEN }}

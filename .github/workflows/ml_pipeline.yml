@@ -34,7 +34,7 @@ jobs:
       - name: Authenticate GCP
         env:
           GOOGLE_APPLICATION_CREDENTIALS: key.json
-        run: 
+        run: |
           pip install google-auth
           echo "GCP credentials setup complete."
 

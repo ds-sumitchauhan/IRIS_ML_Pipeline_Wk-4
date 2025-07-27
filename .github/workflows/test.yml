@@ -25,7 +25,17 @@ jobs:
           pip install cml==0.0.1 --no-deps
 
       - name: Run model training & save output
-        run: python src/model_trainer.py > report.txt
+        run: python src/model_trainer.py df > report.txt
+
+      - name: Set up GCP credentials
+        run: echo "${{ secrets.GCP_CREDENTIALS }}" > key.json
+
+      - name: Authenticate GCP
+        run: |
+          pip install google-auth
+          export GOOGLE_APPLICATION_CREDENTIALS=key.json
+          echo "GCP credentials setup complete."
+
 
       - name: Set up CML CLI
         uses: iterative/setup-cml@v2

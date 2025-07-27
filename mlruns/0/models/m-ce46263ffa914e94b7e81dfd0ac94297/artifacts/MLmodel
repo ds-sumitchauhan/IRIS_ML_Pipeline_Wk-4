@@ -1,0 +1,31 @@
+artifact_path: file:///home/sumitchauhan1986/IRIS_ML_Pipeline_Wk-4/mlruns/0/models/m-ce46263ffa914e94b7e81dfd0ac94297/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.3
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.3.2
+is_signature_from_type_hint: false
+mlflow_version: 3.1.1
+model_id: m-ce46263ffa914e94b7e81dfd0ac94297
+model_size_bytes: 56715
+model_uuid: m-ce46263ffa914e94b7e81dfd0ac94297
+prompts: null
+run_id: f269cf59f4854f95aac9b3b90bf41fd1
+signature:
+  inputs: '[{"type": "double", "name": "sepal_length", "required": true}, {"type":
+    "double", "name": "sepal_width", "required": true}, {"type": "double", "name":
+    "petal_length", "required": true}, {"type": "double", "name": "petal_width", "required":
+    true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "object", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-07-06 18:07:22.755932'

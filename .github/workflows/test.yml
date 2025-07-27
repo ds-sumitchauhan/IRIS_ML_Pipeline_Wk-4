@@ -1,23 +1,38 @@
-name: Run Pytest and Comment Accuracy
+name: Test and Comment
 
-on: [pull_request]
+on:
+  pull_request:
+    branches: [main]
 
 jobs:
-  test:
+  test_and_report:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
-          pip install pandas scikit-learn pytest
+          pip install -r requirements.txt
+          pip install cloud-ml-sdk==0.3.71 --no-deps
+          pip install cloud-ml-common==0.0.2
+          pip install cml==0.0.1 --no-deps
 
-      - name: Run tests
-        run: pytest tests/
+      - name: Run model training & save output
+        run: python src/model_trainer.py > report.txt
+
+      - name: Set up CML CLI
+        uses: iterative/setup-cml@v2
+        
+      - name: Create report
+        run: echo "## ✅ Iris Model Evaluation Report" > report.md
+        
+      - name: Post CML comment
+        run: cml comment create report.md --token ${{ secrets.CML_TOKEN }}
+

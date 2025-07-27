@@ -144,11 +144,25 @@ import sys
 # %%
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
+import mlflow
+import mlflow.sklearn
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.ensemble import RandomForestClassifier as rfc
 from pandas.plotting import parallel_coordinates
 from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn import metrics
+from sklearn.metrics import accuracy_score
+import joblib
+from google.cloud import storage
+import os
 
+
+# Configure GCP Bucket
+BUCKET_NAME = "mlops-course-soy-reporter-459913-v8-unique"
+MODEL_FILENAME = "iris_hyperparam_tuning_best_model.joblib"
+MODEL_LOCAL_PATH = f"outputs/{MODEL_FILENAME}"
+MODEL_GCS_PATH = f"Week_5/{MODEL_FILENAME}"
+
+# Load Data
 data = pd.read_csv('data/iris.csv')
 #data.head(5)
 
@@ -159,26 +173,76 @@ y_train = train.species
 X_test = test[['sepal_length','sepal_width','petal_length','petal_width']]
 y_test = test.species
 
-# %%
-mod_dt = DecisionTreeClassifier(max_depth = 3, random_state = 1)
-mod_dt.fit(X_train,y_train)
-prediction=mod_dt.predict(X_test)
-print('The accuracy of the Decision Tree is',"{:.3f}".format(metrics.accuracy_score(prediction,y_test)))
+# Enable MLflow autologging
+mlflow.sklearn.autolog()
+
+#Define hyperparameter grid
+param_grid = {
+        'n_estimators':[10, 50, 100],
+        'max_depth' : [3,5,10],
+        'min_samples_split':[2,4]
+        }
+
+# Start experiment
+with mlflow.start_run():
+    clf = GridSearchCV(rfc(random_state=42), param_grid, cv = 3)
+    clf.fit(X_train, y_train)
+
+    preds = clf.predict(X_test)
+    acc = accuracy_score(y_test, preds)
+
+    print(f"Best Prams : {clf.best_params_}")
+    print(f"Test Accuracy: {acc:.4f}")
+
+
+    # Save Best model
+    os.makedirs("outputs",exist_ok=True)
+    joblib.dump(clf.best_estimator_, MODEL_LOCAL_PATH)
+    print(f"Saved best model to {MODEL_LOCAL_PATH}")
+
+    # Upload to GCS
+    client = storage.Client()
+    bucket = client.bucket(BUCKET_NAME)
+    blob = bucket.blob(MODEL_GCS_PATH)
+    blob.upload_from_filename(MODEL_LOCAL_PATH)
+    print(f"Uploaded model to gs://{BUCKET_NAME}/{MODEL_GCS_PATH}")
+
+    for param_name, param_value in clf.best_params_.items():
+        mlflow.log_param(param_name, param_value)
+
+    mlflow.log_metric('accuracy', acc)
+    input_example = pd.DataFrame(X_test.iloc[:2]) 
+    mlflow.sklearn.log_model(
+        sk_model=clf.best_estimator_,
+        artifact_path='wk-5_best_model',
+        input_example=input_example,
+        signature=mlflow.models.signature.infer_signature(X_test, y_test)
+        )
+
+
+#mlflow.log_metric("accuracy", acc)
+#mlflow.sklearn.log_model(clf.best_estimator_, "week_5_best_model")
+
+                       # %%
+#od_dt = DecisionTreeClassifier(max_depth = 3, random_state = 1)
+#od_dt.fit(X_train,y_train)
+#rediction=mod_dt.predict(X_test)
+#rint('The accuracy of the Decision Tree is',"{:.3f}".format(metrics.accuracy_score(prediction,y_test)))
 
 # %%
 # import pickle
-import joblib
+#import joblib
 
-joblib.dump(mod_dt, "model.joblib")
+#joblib.dump(mod_dt, "model.joblib")
 
 # %% [markdown]
-# ### Upload model artifacts and custom code to Cloud Storage
-# 
+ ### Upload model artifacts and custom code to Cloud Storage
+ 
 # Before you can deploy your model for serving, Vertex AI needs access to the following files in Cloud Storage:
-# 
+ 
 # * `model.joblib` (model artifact)
 # * `preprocessor.pkl` (model artifact)
-# 
+ 
 # Run the following commands to upload your files:
 
 # %%

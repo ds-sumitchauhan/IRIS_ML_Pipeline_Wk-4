@@ -1,0 +1,10 @@
+artifact_location: file:///home/sumitchauhan1986/IRIS_ML_Pipeline_Wk-4/mlruns/0/models/m-bed6c16722ad4c4db334fea8c6c4e22a/artifacts
+creation_timestamp: 1751825247237
+experiment_id: '0'
+last_updated_timestamp: 1751825250130
+model_id: m-bed6c16722ad4c4db334fea8c6c4e22a
+model_type: null
+name: best_estimator
+source_run_id: f269cf59f4854f95aac9b3b90bf41fd1
+status: 2
+status_message: null

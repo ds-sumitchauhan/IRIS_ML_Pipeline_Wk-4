@@ -201,6 +201,7 @@ with mlflow.start_run():
     print(f"Saved best model to {MODEL_LOCAL_PATH}")
 
     # Upload to GCS
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key.json"
     client = storage.Client()
     bucket = client.bucket(BUCKET_NAME)
     blob = bucket.blob(MODEL_GCS_PATH)

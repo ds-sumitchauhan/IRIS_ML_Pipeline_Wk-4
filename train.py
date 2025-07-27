@@ -153,6 +153,7 @@ from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.metrics import accuracy_score
 import joblib
 from google.cloud import storage
+from google.oauth2 import service_account
 import os
 
 
@@ -183,6 +184,9 @@ param_grid = {
         'min_samples_split':[2,4]
         }
 
+
+
+credentials = service_account.Credentials.from_service_account_file("key.json")
 # Start experiment
 with mlflow.start_run():
     clf = GridSearchCV(rfc(random_state=42), param_grid, cv = 3)
@@ -202,7 +206,7 @@ with mlflow.start_run():
 
     # Upload to GCS
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "key.json"
-    client = storage.Client()
+    client = storage.Client(credentials=credentials, project=credentials.project_id)
     bucket = client.bucket(BUCKET_NAME)
     blob = bucket.blob(MODEL_GCS_PATH)
     blob.upload_from_filename(MODEL_LOCAL_PATH)

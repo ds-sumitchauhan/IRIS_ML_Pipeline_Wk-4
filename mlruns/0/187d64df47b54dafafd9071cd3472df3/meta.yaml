@@ -1,0 +1,14 @@
+artifact_uri: file:///home/sumitchauhan1986/IRIS_ML_Pipeline_Wk-4/mlruns/0/187d64df47b54dafafd9071cd3472df3/artifacts
+end_time: 1751825250134
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 187d64df47b54dafafd9071cd3472df3
+run_name: thoughtful-stork-335
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1751825237815
+status: 3
+tags: []
+user_id: sumitchauhan1986

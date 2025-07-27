@@ -151,7 +151,18 @@ from sklearn.ensemble import RandomForestClassifier as rfc
 from pandas.plotting import parallel_coordinates
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.metrics import accuracy_score
+import joblib
+from google.cloud import storage
+import os
 
+
+# Configure GCP Bucket
+BUCKET_NAME = "mlops-course-soy-reporter-459913-v8-unique"
+MODEL_FILENAME = "iris_hyperparam_tuning_best_model.joblib"
+MODEL_LOCAL_PATH = f"outputs/{MODEL_FILENAME}"
+MODEL_GCS_PATH = f"Week_5/{MODEL_FILENAME}"
+
+# Load Data
 data = pd.read_csv('data/iris.csv')
 #data.head(5)
 
@@ -183,8 +194,34 @@ with mlflow.start_run():
     print(f"Best Prams : {clf.best_params_}")
     print(f"Test Accuracy: {acc:.4f}")
 
-mlflow.log_metric("accuracy", acc)
-mlflow.sklearn.log_model(clf.best_estimator_, "best_model")
+
+    # Save Best model
+    os.makedirs("outputs",exist_ok=True)
+    joblib.dump(clf.best_estimator_, MODEL_LOCAL_PATH)
+    print(f"Saved best model to {MODEL_LOCAL_PATH}")
+
+    # Upload to GCS
+    client = storage.Client()
+    bucket = client.bucket(BUCKET_NAME)
+    blob = bucket.blob(MODEL_GCS_PATH)
+    blob.upload_from_filename(MODEL_LOCAL_PATH)
+    print(f"Uploaded model to gs://{BUCKET_NAME}/{MODEL_GCS_PATH}")
+
+    for param_name, param_value in clf.best_params_.items():
+        mlflow.log_param(param_name, param_value)
+
+    mlflow.log_metric('accuracy', acc)
+    input_example = pd.DataFrame(X_test.iloc[:2]) 
+    mlflow.sklearn.log_model(
+        sk_model=clf.best_estimator_,
+        artifact_path='wk-5_best_model',
+        input_example=input_example,
+        signature=mlflow.models.signature.infer_signature(X_test, y_test)
+        )
+
+
+#mlflow.log_metric("accuracy", acc)
+#mlflow.sklearn.log_model(clf.best_estimator_, "week_5_best_model")
 
                        # %%
 #od_dt = DecisionTreeClassifier(max_depth = 3, random_state = 1)
@@ -194,18 +231,18 @@ mlflow.sklearn.log_model(clf.best_estimator_, "best_model")
 
 # %%
 # import pickle
-#mport joblib
+#import joblib
 
-#oblib.dump(mod_dt, "model.joblib")
+#joblib.dump(mod_dt, "model.joblib")
 
 # %% [markdown]
-# ### Upload model artifacts and custom code to Cloud Storage
-# 
+ ### Upload model artifacts and custom code to Cloud Storage
+ 
 # Before you can deploy your model for serving, Vertex AI needs access to the following files in Cloud Storage:
-# 
+ 
 # * `model.joblib` (model artifact)
 # * `preprocessor.pkl` (model artifact)
-# 
+ 
 # Run the following commands to upload your files:
 
 # %%

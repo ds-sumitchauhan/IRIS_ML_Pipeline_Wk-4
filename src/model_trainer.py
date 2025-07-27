@@ -4,6 +4,7 @@ from sklearn.metrics import accuracy_score
 import sys
 
 def train_and_evaluate():
+    df = pd.read_csv("data/iris.csv")
     X = df.drop(columns=["species"])
     y = df["species"]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)

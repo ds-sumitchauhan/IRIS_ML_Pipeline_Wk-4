@@ -1,6 +1,7 @@
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+import sys
 
 def train_and_evaluate(df):
     X = df.drop(columns=["species"])
@@ -15,6 +16,7 @@ def train_and_evaluate(df):
 #from src.model import train_and_evaluate
 
 if __name__ == "__main__":
-    model, acc = train_and_evaluate()
+    df = sys.argv[1]
+    model, acc = train_and_evaluate(df)
     print(f"Model trained successfully.\n Accuracy: {acc:.4f}")
 

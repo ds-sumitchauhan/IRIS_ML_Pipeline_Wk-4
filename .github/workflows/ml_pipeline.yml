@@ -36,7 +36,6 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: key.json
         run: 
           pip install google-auth
-          # export GOOGLE_APPLICATION_CREDENTIALS=key.json
           echo "GCP credentials setup complete."
 
 

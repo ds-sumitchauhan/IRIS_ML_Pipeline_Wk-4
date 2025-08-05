@@ -1,0 +1,14 @@
+artifact_uri: file:///home/sumitchauhan1986/week-8/IRIS_ML_Pipeline_Wk-4/mlruns/585138856072926782/62f6392225cf4f378b2cf6c6c19e99b3/artifacts
+end_time: 1754424386515
+entry_point_name: ''
+experiment_id: '585138856072926782'
+lifecycle_stage: active
+run_id: 62f6392225cf4f378b2cf6c6c19e99b3
+run_name: Poisoning Experiment Parent Run
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1754424372719
+status: 3
+tags: []
+user_id: sumitchauhan1986

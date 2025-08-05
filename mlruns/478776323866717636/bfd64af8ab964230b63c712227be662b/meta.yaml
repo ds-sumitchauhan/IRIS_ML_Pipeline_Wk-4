@@ -1,0 +1,14 @@
+artifact_uri: file:///home/sumitchauhan1986/week-8/IRIS_ML_Pipeline_Wk-4/mlruns/478776323866717636/bfd64af8ab964230b63c712227be662b/artifacts
+end_time: 1754420323231
+entry_point_name: ''
+experiment_id: '478776323866717636'
+lifecycle_stage: active
+run_id: bfd64af8ab964230b63c712227be662b
+run_name: delicate-slug-702
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1754420323219
+status: 3
+tags: []
+user_id: sumitchauhan1986

@@ -1,0 +1,10 @@
+artifact_location: file:///home/sumitchauhan1986/week-8/IRIS_ML_Pipeline_Wk-4/mlruns/585138856072926782/models/m-48e1a5b9cdc14e079a8a4aa2c888eb4e/artifacts
+creation_timestamp: 1754419794131
+experiment_id: '585138856072926782'
+last_updated_timestamp: 1754419797735
+model_id: m-48e1a5b9cdc14e079a8a4aa2c888eb4e
+model_type: null
+name: iris_model_poisoned_0
+source_run_id: 3db6b795cbc54919917bb922e63ad75c
+status: 2
+status_message: null

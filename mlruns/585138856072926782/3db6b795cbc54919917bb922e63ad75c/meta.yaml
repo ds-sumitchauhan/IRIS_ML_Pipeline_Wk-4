@@ -1,0 +1,14 @@
+artifact_uri: file:///home/sumitchauhan1986/week-8/IRIS_ML_Pipeline_Wk-4/mlruns/585138856072926782/3db6b795cbc54919917bb922e63ad75c/artifacts
+end_time: 1754419797976
+entry_point_name: ''
+experiment_id: '585138856072926782'
+lifecycle_stage: active
+run_id: 3db6b795cbc54919917bb922e63ad75c
+run_name: Poisoning_Level_0%
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1754419794071
+status: 3
+tags: []
+user_id: sumitchauhan1986

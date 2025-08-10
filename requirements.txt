@@ -12,3 +12,5 @@ black
 flake8
 google-cloud-aiplatform
 google-cloud-storage
+fairlearn
+shap

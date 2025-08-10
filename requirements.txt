@@ -6,6 +6,7 @@ joblib==1.3.2
 google-cloud-storage
 pytest==7.4.4
 matplotlib
+seaborn
 dvc
 dvc[gs]
 black
@@ -14,3 +15,4 @@ google-cloud-aiplatform
 google-cloud-storage
 fairlearn
 shap
+evidently

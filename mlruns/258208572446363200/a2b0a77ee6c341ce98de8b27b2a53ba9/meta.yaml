@@ -1,0 +1,14 @@
+artifact_uri: file:///home/sumitchauhan1986/week-9/IRIS_ML_Pipeline_Wk-4/mlruns/258208572446363200/a2b0a77ee6c341ce98de8b27b2a53ba9/artifacts
+end_time: 1754853524099
+entry_point_name: ''
+experiment_id: '258208572446363200'
+lifecycle_stage: active
+run_id: a2b0a77ee6c341ce98de8b27b2a53ba9
+run_name: Iris_Governed_Run
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1754853523831
+status: 4
+tags: []
+user_id: sumitchauhan1986

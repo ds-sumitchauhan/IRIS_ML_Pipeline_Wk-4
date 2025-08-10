@@ -1,0 +1,11 @@
+Overall Model Metrics:
+accuracy     0.911111
+precision    0.915535
+recall       0.911111
+dtype: float64
+
+Metrics by Location Group:
+          accuracy  precision  recall
+location                             
+0             0.75   0.761905    0.75
+1             1.00   1.000000    1.00
